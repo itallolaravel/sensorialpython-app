@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Atendimento e CIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos conforme a versão em Laravel */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h2>Cadastrar Atendimento</h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="{{ category }}-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('cadastrar') }}" method="POST">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="text" name="cpf" placeholder="CPF" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="solicitante" placeholder="Solicitante" required>
+                <button type="submit">Cadastrar Atendimento</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Cadastrar CIN</h2>
+            <form action="{{ url_for('cadastrar_cin') }}" method="POST">
+                <input type="text" name="cpf" placeholder="CPF da CIN" required>
+                <input type="text" name="nome" placeholder="Nome" required>
+                <button type="submit">Cadastrar CIN</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Relatórios</h2>
+            <form action="{{ url_for('gerar_relatorio') }}" method="GET" target="_blank">
+                <input type="date" name="data_inicio" required>
+                <input type="date" name="data_fim" required>
+                <button type="submit">Gerar Relatório</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>Buscar CIN</h2>
+            <form action="{{ url_for('buscar_cin') }}" method="GET">
+                <input type="text" name="query" placeholder="Digite CPF ou Nome" required>
+                <button type="submit">Buscar</button>
+            </form>
+
+            {% if results %}
+                <div class="results">
+                    <h3>Resultados:</h3>
+                    {% for result in results %}
+                        <div class="result-item">
+                            <p><strong>Nome:</strong> {{ result.nome }}</p>
+                            <p><strong>CPF:</strong> {{ result.cpf }}</p>
+                            <p><strong>Status:</strong> {{ result.status }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% elif results is not none %}
+                <p class="error-message">Nenhum resultado encontrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
